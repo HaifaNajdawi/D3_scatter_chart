@@ -1,5 +1,5 @@
 // set the dimentions and the margins of the graph
-var margin = {top:10, right:30, bottom:30 , left:10};
+var margin = {top:10, right:30, bottom:30 , left:30};
 var svgWidth = 900;
 var svgHeight = 600;
 
@@ -18,5 +18,24 @@ var svg= d3.select("#scatter")
 // read the data path based to index file 
 d3.csv("assets/data/data.csv").then(function(journalData){
     console.log("data",journalData)
-})
+    // add x axis
+    var xScale=d3.scaleLinear()
+            .domain([0,d3.max(journalData, d =>d.poverty)])
+            .range([0,chartWidth]);
+        svg.append("g")
+            // x axis to bottom
+            .attr("transform",`translate(0,${chartHeight})`)
+            // ticks loction
+            .call(d3.axisBottom(xScale));
+    // add y axis
+    var yScale=d3.scaleLinear()
+            .domain([0,d3.max(journalData,d => d.healthcare)])
+            .range([chartHeight,0])
+        svg.append("g")
+            .call(d3.axisLeft(yScale))
+
+    
+
+});
+
 
