@@ -42,8 +42,8 @@ d3.csv("assets/data/data.csv").then(function(journalData){
         .enter()
         .append("circle")
         .classed("stateCircle", true)
-            .attr("cx",d => +(d.poverty))
-            .attr("cy",d => +(d.healthcare))
+            .attr("cx",d => xScale(d.poverty))
+            .attr("cy",d => yScale(d.healthcare))
             .attr("r",10)
 
 
