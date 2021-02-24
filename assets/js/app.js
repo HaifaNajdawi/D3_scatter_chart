@@ -1,7 +1,7 @@
 // set the dimentions and the margins of the graph
-var margin = { top: 10, right: 30, bottom: 30, left: 30 };
+var margin = { top: 10, right: 30, bottom: 70, left: 50 };
 var svgWidth = 800;
-var svgHeight = 600;
+var svgHeight = 400;
 
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
@@ -58,6 +58,22 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
     .attr("x",  d => xScale(d.poverty))
     .attr("y", d => yScale(d.healthcare))
     .text(d => d.abbr );
+
+    chartGroup.append("text")
+    .attr("class", "active")
+    .attr("x",chartWidth/2)
+    .attr("y", chartHeight+ margin.top + 23)
+    .text("In Poverty %");
+
+    chartGroup.append("text")
+    .attr("class", "active")
+    .attr("x", 0 - (chartHeight / 2))
+    .attr("y", 0 - margin.left +20)
+    .attr("transform","rotate(-90)")
+    .text("Lack Helathcare %");
+
+
+
 
 
 
