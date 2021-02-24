@@ -1,5 +1,6 @@
 // set the dimentions and the margins of the graph
 var margin = { top: 10, right: 30, bottom: 70, left: 50 };
+
 var svgWidth = 800;
 var svgHeight = 400;
 
@@ -32,8 +33,8 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .attr("transform", `translate(0,${chartHeight})`)
         // ticks loction
         .call(d3.axisBottom(xScale));
-    // add y axis
 
+    // add y axis ticks 
     var yScale = d3.scaleLinear()
         .domain(d3.extent(journalData, d => +(d.healthcare)))
         .range([chartHeight, 0])
@@ -41,6 +42,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
     chartGroup.append("g")
         .call(d3.axisLeft(yScale));
 
+    // append circles to chart 
     chartGroup.append("g").selectAll(".stateCircle")
         .data(journalData)
         .enter()
@@ -48,8 +50,9 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .classed("stateCircle", true)
         .attr("cx", d => xScale(d.poverty))
         .attr("cy", d => yScale(d.healthcare))
-        .attr("r", 10)
+        .attr("r", 10);
 
+    // append text to circles 
     chartGroup.append("g").selectAll(".stateText")
     .data(journalData)
     .enter()
@@ -59,12 +62,14 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
     .attr("y", d => yScale(d.healthcare))
     .text(d => d.abbr );
 
+    // x axis title
     chartGroup.append("text")
     .attr("class", "active")
     .attr("x",chartWidth/2)
     .attr("y", chartHeight+ margin.top + 23)
     .text("In Poverty %");
 
+    // y axis title
     chartGroup.append("text")
     .attr("class", "active")
     .attr("x", 0 - (chartHeight / 2))
