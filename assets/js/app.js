@@ -162,5 +162,37 @@ function renderTextCircle(journalData,circleGroup){
 }
 d3.csv("assets/data/data.csv").then(function (journalData) {
     console.log("data", journalData)
-    yAxisScale(journalData,ykey)
+
+    journalData.forEach(function data(){
+        data.poverty= +data.poverty
+        data.age = +data.age
+        data.income= +data.income
+        data.healthcare= +data.healthcare
+        data.smokes= +data.smokes
+        data.obesity = +data.obesity
+        // console.log(data.poverty)
+
+       
+    })
+    var xLinear=xAxisScale(journalData,xkey)
+    var yLinear=yAxisScale(journalData,ykey)
+
+    var bottomAxis = d3.axisBottom(xLinear);
+    var leftAxis = d3.axisLeft(yLinear)
+
+    var xAxis=chartGroup.append("g")
+        .attr("transform",`translate(0,${chartHeight})`)
+        .call(bottomAxis);
+
+    var yAxis=chartGroup.append("g")
+        .call(leftAxis);
+    
+    chartGroup.append("g").selectAll(".stateCircle")
+        .data(journalData)
+        .enter()
+        .append("circle")
+        .classed("stateCircle", true)
+        .attr("cx", d => xLinear(d[xkey]))
+        .attr("cy", d => yLinear(d[ykey]))
+        .attr("r", 10);
 })
