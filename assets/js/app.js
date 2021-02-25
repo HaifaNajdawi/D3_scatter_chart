@@ -99,20 +99,26 @@ var svg = d3.select("#scatter")
 const chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
-function xAxisScale(csvData, key) {
+
+var xkey="poverty";
+var ykey="healthcare";
+
+    
+function xAxisScale(journalData, xkey) {
     xScale = d3.scaleLinear()
-        .domain([d3.min(csvData, d => d[key]), d3.max(csvData, d => d[key])])
+        .domain([d3.min(journalData, d => d[xkey]), d3.max(journalData, d => d[xkey])])
         .range([0, chartWidth])
     return xScale
 
-};
+}
 
-function yAxisScale(csvData, key) {
+
+function yAxisScale(journalData, ykey) {
     yScale = d3.scaleLinear()
-        .domain([d3.min(csvData, d => d[key]), d3.max(csvData, d => d[key])])
+        .domain([d3.min(journalData, d => d[ykey]), d3.max(journalData, d => d[ykey])])
         .range([chartHeight, 0])
     return yScale
-};
+}
 
 function renderAxes(newXScale, xAxis) {
     var bottomAxis = d3.axisBottom(newXScale);
@@ -134,18 +140,27 @@ function renderAxes(newYScale, yAxis) {
     return yAxis;
 }
 
-function renderXCircle(circleGroup, newXScale, key) {
+function renderXCircle(circleGroup, newXScale, xkey) {
     circleGroup.transition()
-        .attr("cx", d => newXScale(d[key]))
+        .attr("cx", d => newXScale(d[xkey]))
     return circleGroup
 
 }
 
-function renderYCircle(circleGroup, newYScale, key) {
+function renderYCircle(circleGroup, newYScale, ykey) {
     circleGroup.transition()
-        .attr("cy", d => newYScale(d[key]))
+        .attr("cy", d => newYScale(d[ykey]))
     return circleGroup
 
 }
 
+function renderTextCircle(journalData,circleGroup){
+    circleGroup.transition()
+    .text(d=> journalData(d.abbr))
+    return circleGroup
 
+}
+d3.csv("assets/data/data.csv").then(function (journalData) {
+    console.log("data", journalData)
+    yAxisScale(journalData,ykey)
+})
