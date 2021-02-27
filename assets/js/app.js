@@ -84,7 +84,7 @@
 var margin = { top: 10, right: 30, bottom: 100, left: 100 };
 
 var svgWidth = 800;
-var svgHeight = 400;
+var svgHeight = 500;
 
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
