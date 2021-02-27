@@ -157,18 +157,79 @@ function yRenderCircle(circleGroup, yNewScale, ykey) {
 function xRenderTextCircle(textGroup,xNewScale,xkey) {
     textGroup.transition()
         .attr("x",d => xNewScale(d[xkey]))
-        
-        
     return textGroup
 
 }
 function yRenderTextCircle(textGroup,yNewScale,ykey){
     textGroup.transition()
         .attr("y", d => yNewScale(d[ykey]))
-        
-    
     return textGroup
 }
+
+// tooltip function to update citcle group with new one
+
+function xUpdatetoolTip(xkey,circleGroup){
+    var label;
+
+    if (xkey === "age"){
+        label = "age"
+    }
+    else if (xkey == "income"){
+        label = "income"
+    }
+    else {
+        label="poverty"
+    }
+    var toolTip = d3.tip()
+        .attr("class","d3-tip")
+        // .offset([80,-60])
+        .html(function(d){
+            return(`${d.state} <br> ${label}: ${d[xkey]}`)
+        });
+    circleGroup.call(toolTip)
+
+    circleGroup.on("mouseover",function(data){
+        toolTip.show(data)
+    })
+    circleGroup.on("mouseout",function(data){
+        toolTip.hide(data)
+    })
+return circleGroup;
+}
+
+function yUpdatetoolTip(ykey,circleGroup){
+    var label;
+
+    if (ykey === "smokes"){
+        label = "smokes"
+    }
+    else if (ykey == "obesity"){
+        label = "obesity"
+    }
+    else {
+        label="healthcare"
+    }
+    var toolTip = d3.tip()
+        .attr("class","d3-tip")
+        // .offset([80,-60])
+        .html(function(d){
+            return(`<br> <br> <br> ${label}: ${d[ykey]}`)
+        });
+    circleGroup.call(toolTip)
+
+    circleGroup.on("mouseover",function(data){
+        toolTip.show(data)
+    })
+    circleGroup.on("mouseout",function(data){
+        toolTip.hide(data)
+    })
+return circleGroup;
+}
+
+
+
+
+
 
 d3.csv("assets/data/data.csv").then(function (journalData) {
 // if (err) throw (err);
@@ -274,7 +335,10 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
     // updateToolTip function above csv import
-    // var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+    var circleGroup = xUpdatetoolTip(xkey, circleGroup);
+    var circleGroup = yUpdatetoolTip(ykey, circleGroup);
+
+
 
     // x axis labels event listener
     xlabelsGroup.selectAll("text")
@@ -302,7 +366,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
 
                 // updates tooltips with new info
-                //   circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+                circleGroup = xUpdatetoolTip(xkey, circleGroup);
 
                 // changes classes to change bold text
                 if (xkey === "age") {
@@ -369,7 +433,8 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
                 // updates tooltips with new info
-                //   circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+                circleGroup = yUpdatetoolTip(ykey, circleGroup);
+
 
                 // changes classes to change bold text
                 if (ykey === "smokes") {
