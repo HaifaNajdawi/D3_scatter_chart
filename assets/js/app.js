@@ -154,12 +154,20 @@ function yRenderCircle(circleGroup, yNewScale, ykey) {
 
 }
 
-function renderTextCircle(textGroup,journalData) {
+function xRenderTextCircle(textGroup,xNewScale,xkey) {
     textGroup.transition()
-        .text(d => journalData(d.abbr))
-        .classed("stateText", true)
-    return circleGroup
+        .attr("x",d => xNewScale(d[xkey]))
+        
+        
+    return textGroup
 
+}
+function yRenderTextCircle(textGroup,yNewScale,ykey){
+    textGroup.transition()
+        .attr("y", d => yNewScale(d[ykey]))
+        
+    
+    return textGroup
 }
 
 d3.csv("assets/data/data.csv").then(function (journalData) {
@@ -200,13 +208,13 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .attr("r", 10);
 
     var textGroup = chartGroup.append("g").selectAll(".stateText")
-    .data(journalData)
-    .enter()
-    .append("text")
-    .classed("stateText", true)
-    .attr("x",  d => xLinear(d[xkey]))
-    .attr("y", d => yLinear(d[ykey]))
-    .text(d => d.abbr );
+        .data(journalData)
+        .enter()
+        .append("text")
+        .classed("stateText", true)
+        .attr("x",  d => xLinear(d[xkey]))
+        .attr("y", d => yLinear(d[ykey]))
+        .text(d => d.abbr );
 
     // Create group for three x-axis labels
     var xlabelsGroup = chartGroup.append("g")
@@ -291,7 +299,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 // updates circles with new x values
                 circleGroup = xRenderCircle(circleGroup, xLinearScale, xkey);
 
-                marks= renderTextCircle(textGroup,journalData)
+                textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
 
                 // updates tooltips with new info
                 //   circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
@@ -357,7 +365,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 // updates circles with new x values
                 circleGroup = yRenderCircle(circleGroup, yLinearScale, ykey)
 
-                marks= renderTextCircle(journalData)
+                textGroup= yRenderTextCircle(textGroup,yLinearScale,ykey)
 
 
                 // updates tooltips with new info
