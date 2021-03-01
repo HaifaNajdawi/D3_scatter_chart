@@ -23,13 +23,13 @@ const chartGroup = svg.append("g")
 // defulat values for x and y axises 
 var xkey = "poverty";
 var ykey = "healthcare";
-    
+
 
 // function to put ticks values in x axis with the name of database 
 function xAxisScale(journalData, xkey) {
     xScale = d3.scaleLinear()
-        .domain([d3.min(journalData, d => d[xkey]) *0.8
-        , d3.max(journalData, d => d[xkey])* 1.2])
+        .domain([d3.min(journalData, d => d[xkey]) * 0.8
+            , d3.max(journalData, d => d[xkey]) * 1.2])
         .range([0, chartWidth])
     return xScale
 
@@ -39,7 +39,7 @@ function xAxisScale(journalData, xkey) {
 function yAxisScale(journalData, ykey) {
     yScale = d3.scaleLinear()
         .domain([d3.min(journalData, d => d[ykey]) * 0.8,
-         d3.max(journalData, d => d[ykey]) * 1.2])
+        d3.max(journalData, d => d[ykey]) * 1.2])
         .range([chartHeight, 0])
     return yScale
 }
@@ -81,64 +81,67 @@ function yRenderCircle(circleGroup, yNewScale, ykey) {
 }
 
 // update x values in the text 
-function xRenderTextCircle(textGroup,xNewScale,xkey) {
+function xRenderTextCircle(textGroup, xNewScale, xkey) {
     textGroup.transition()
-        .attr("x",d => xNewScale(d[xkey]))
+        .attr("x", d => xNewScale(d[xkey]))
     return textGroup
 
 }
 
 // update y values in the text 
-function yRenderTextCircle(textGroup,yNewScale,ykey){
+function yRenderTextCircle(textGroup, yNewScale, ykey) {
     textGroup.transition()
         .attr("y", d => yNewScale(d[ykey]))
     return textGroup
 }
 
 // tooltip function to update citcle group with new one
-function xUpdateToolTip(xkey,circleGroup){
+function xUpdateToolTip(xkey, circleGroup) {
 
 
     var toolTip = d3.tip()
-    // class from css
-        .attr("class","d3-tip")
+        // class from css
+        .attr("class", "d3-tip")
         // how the toolTip far from the circle
-        .offset([80,-60])
-        .html(function(d){
-            newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}: ${d[ykey]}`
-            return(newText)
+        .offset([80, -60])
+        .html(function (d) {
+            newText = `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}: ${d[ykey]}`
+            return (newText)
         });
     circleGroup.call(toolTip)
-        // function return to the event listner mouseover
-    circleGroup.on("mouseover",function(data){
-        toolTip.show(data)
+    // function return to the event listner mouseover
+    circleGroup.on("mouseover", function (d) {
+        toolTip.show(d, this)
     })
-    circleGroup.on("mouseout",function(data){
-        toolTip.hide(data)
-    })
-return circleGroup;
+        // onmouseout event
+        .on("mouseout", function (data) {
+            toolTip.hide(data);
+        });
+    return circleGroup;
 }
 // update ykey in tooltip 
-function yUpdateToolTip(ykey,circleGroup){
+function yUpdateToolTip(ykey, circleGroup) {
 
 
     var toolTip = d3.tip()
-        .attr("class","d3-tip")
+        .attr("class", "d3-tip")
         .offset([80, -60])
-        .html(function(d){
-            newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}:  ${d[ykey]}`
-            return(newText)
+        .html(function (d) {
+            newText = `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}:  ${d[ykey]}`
+            return (newText)
         });
-    circleGroup.call(toolTip)
 
-    circleGroup.on("mouseover",function(data){
-        toolTip.show(data)
+    circleGroup.call(toolTip);
+
+    circleGroup.on("mouseover", function (d) {
+        toolTip.show(d, this)
     })
-    circleGroup.on("mouseout",function(data){
-        toolTip.hide(data)
-    })
-return circleGroup;
-};
+        // onmouseout event
+        .on("mouseout", function (data, index) {
+            toolTip.hide(data);
+        });
+    return circleGroup;
+}
 
 
 // function xUpdateToolTip(xkey,circleGroup) {
@@ -207,7 +210,7 @@ return circleGroup;
 
 // load the csv using d3 then create funtion has the data 
 d3.csv("assets/data/data.csv").then(function (journalData) {
-// if (err) throw (err);
+    // if (err) throw (err);
     console.log("data", journalData)
 
     // converts number from string to float
@@ -236,7 +239,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
     var yAxis = chartGroup.append("g")
         .call(leftAxis);
 
-    var circleGroup= chartGroup.append("g").selectAll(".stateCircle")
+    var circleGroup = chartGroup.append("g").selectAll(".stateCircle")
         .data(journalData)
         .enter()
         .append("circle")
@@ -250,9 +253,9 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .enter()
         .append("text")
         .classed("stateText", true)
-        .attr("x",  d => xLinear(d[xkey]))
+        .attr("x", d => xLinear(d[xkey]))
         .attr("y", d => yLinear(d[ykey]))
-        .text(d => d.abbr );
+        .text(d => d.abbr);
 
     // Create group for three x-axis labels
     var xlabelsGroup = chartGroup.append("g")
@@ -286,7 +289,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         // .attr("y", 0 - margin.left +20)
 
         .attr("transform", "rotate(-90)")
-        
+
 
     healthcareLabel = yLabelsGroup.append("text")
         .attr("x", -150)
@@ -314,7 +317,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
     // updateToolTip function above csv import
     var circleGroup = xUpdateToolTip(xkey, circleGroup);
     var circleGroup = yUpdateToolTip(ykey, circleGroup);
-    
+
 
 
     // x axis labels event listener
@@ -341,7 +344,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 circleGroup = xRenderCircle(circleGroup, xLinearScale, xkey);
 
                 // update texts with new x value 
-                textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
+                textGroup = xRenderTextCircle(textGroup, xLinearScale, xkey)
 
                 // updates tooltips with new info
                 circleGroup = xUpdateToolTip(xkey, circleGroup);
@@ -407,7 +410,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 // updates circles with new x values
                 circleGroup = yRenderCircle(circleGroup, yLinearScale, ykey)
 
-                textGroup= yRenderTextCircle(textGroup,yLinearScale,ykey)
+                textGroup = yRenderTextCircle(textGroup, yLinearScale, ykey)
 
 
                 // updates tooltips with new info
@@ -456,9 +459,9 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
 
-    }).catch(function(error) {
-        console.log(error);
-      
+}).catch(function (error) {
+    console.log(error);
+
 
 
 
