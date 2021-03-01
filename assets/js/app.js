@@ -1,8 +1,11 @@
+// create margin around the chart
 var margin = { top: 10, right: 30, bottom: 100, left: 100 };
 
+// svg size
 var svgWidth = 800;
 var svgHeight = 500;
 
+// chart size
 var chartWidth = svgWidth - margin.left - margin.right;
 var chartHeight = svgHeight - margin.top - margin.bottom;
 
@@ -13,14 +16,16 @@ var svg = d3.select("#scatter")
     .attr("width", svgWidth)
     .attr("height", svgHeight)
 
+// create varible to hold svg elements
 const chartGroup = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`)
 
+// defulat values for x and y axises 
 var xkey = "poverty";
 var ykey = "healthcare";
     
 
-
+// function to put ticks values in x axis with the name of database 
 function xAxisScale(journalData, xkey) {
     xScale = d3.scaleLinear()
         .domain([d3.min(journalData, d => d[xkey]) *0.8
@@ -30,7 +35,7 @@ function xAxisScale(journalData, xkey) {
 
 }
 
-
+// function to put ticks values in y axis with the name of database 
 function yAxisScale(journalData, ykey) {
     yScale = d3.scaleLinear()
         .domain([d3.min(journalData, d => d[ykey]) * 0.8,
@@ -39,6 +44,7 @@ function yAxisScale(journalData, ykey) {
     return yScale
 }
 
+// to locate ticks for x axis in bottom
 function xRenderAxes(xNewScale, xAxis) {
     var bottomAxis = d3.axisBottom(xNewScale);
 
@@ -48,7 +54,7 @@ function xRenderAxes(xNewScale, xAxis) {
 
     return xAxis;
 }
-
+// to locate ticks for y axis in left
 function yRenderAxes(yNewScale, yAxis) {
     var leftAxis = d3.axisLeft(yNewScale);
 
@@ -59,13 +65,14 @@ function yRenderAxes(yNewScale, yAxis) {
     return yAxis;
 }
 
+// update cx values in the circle 
 function xRenderCircle(circleGroup, xNewScale, xkey) {
     circleGroup.transition()
         .attr("cx", d => xNewScale(d[xkey]))
     return circleGroup
 
 }
-
+// update cy values in the circle 
 function yRenderCircle(circleGroup, yNewScale, ykey) {
     circleGroup.transition()
         .attr("cy", d => yNewScale(d[ykey]))
@@ -73,12 +80,15 @@ function yRenderCircle(circleGroup, yNewScale, ykey) {
 
 }
 
+// update x values in the text 
 function xRenderTextCircle(textGroup,xNewScale,xkey) {
     textGroup.transition()
         .attr("x",d => xNewScale(d[xkey]))
     return textGroup
 
 }
+
+// update y values in the text 
 function yRenderTextCircle(textGroup,yNewScale,ykey){
     textGroup.transition()
         .attr("y", d => yNewScale(d[ykey]))
@@ -86,19 +96,20 @@ function yRenderTextCircle(textGroup,yNewScale,ykey){
 }
 
 // tooltip function to update citcle group with new one
-
 function xUpdateToolTip(xkey,circleGroup){
 
 
     var toolTip = d3.tip()
+    // class from css
         .attr("class","d3-tip")
-        .offset([80,-70])
+        // how the toolTip far from the circle
+        .offset([80,-60])
         .html(function(d){
             newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}: ${d[ykey]}`
             return(newText)
         });
     circleGroup.call(toolTip)
-
+        // function return to the event listner mouseover
     circleGroup.on("mouseover",function(data){
         toolTip.show(data)
     })
@@ -107,13 +118,13 @@ function xUpdateToolTip(xkey,circleGroup){
     })
 return circleGroup;
 }
-
+// update ykey in tooltip 
 function yUpdateToolTip(ykey,circleGroup){
 
 
     var toolTip = d3.tip()
         .attr("class","d3-tip")
-        .offset([80,-70])
+        .offset([80, -60])
         .html(function(d){
             newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}:  ${d[ykey]}`
             return(newText)
@@ -127,17 +138,79 @@ function yUpdateToolTip(ykey,circleGroup){
         toolTip.hide(data)
     })
 return circleGroup;
-}
+};
+
+
+// function xUpdateToolTip(xkey,circleGroup) {
+//     // var label;
+//     // if (xkey === "poverty") {
+//     //   label = "Poverty:";
+//     // }
+//     // else if (xkey === "age") {
+//     //   label = "Age:";
+//     // }
+//     // else {
+//     //   label = "Income: $";
+//     // }
+//     var toolTip = d3.tip()
+//       .attr("class", "d3-tip")
+//       .offset([80, -60])
+//       .html(function(d) {
+//         return (`${d.state},${d.abbr}<br>${xkey} ${d[xkey]} <br> ${chosenYAxis} : ${d[chosenYAxis]}%`);
+//       });
+//     circleGroup.call(toolTip);
+//     // circlesGroup.on("mouseover", function(data) {
+//     //   toolTip.show(data);
+//     // })
+//     circleGroup.on("mouseover",function(d) { 
+//       toolTip.show(d, this)})
+//       // onmouseout event
+//       .on("mouseout", function(data, index) {
+//         toolTip.hide(data);
+//       });
+//     return circleGroup;
+//   }
+//   function yUpdateToolTip(ykey,circleGroup) {
+//     // var label;
+//     // if (ykey === "poverty") {
+//     //   label = "Poverty:";
+//     // }
+//     // else if (ykey === "age") {
+//     //   label = "Age:";
+//     // }
+//     // else {
+//     //   label = "Income: $";
+//     // }
+//     var toolTip = d3.tip()
+//       .attr("class", "d3-tip")
+//       .offset([80, -60])
+//       .html(function(d) {
+//         return (`${d.state},${d.abbr}<br>${xkey} ${d[xkey]} <br> ${ykey} : ${d[ykey]}%`);
+//       });
+//     circleGroup.call(toolTip);
+//     // circlesGroup.on("mouseover", function(data) {
+//     //   toolTip.show(data);
+//     // })
+//     circleGroup.on("mouseover",function(d) { 
+//       toolTip.show(d, this)})
+//       // onmouseout event
+//       .on("mouseout", function(data, index) {
+//         toolTip.hide(data);
+//       });
+//     return circleGroup;
+//   }
 
 
 
 
 
 
+// load the csv using d3 then create funtion has the data 
 d3.csv("assets/data/data.csv").then(function (journalData) {
 // if (err) throw (err);
     console.log("data", journalData)
 
+    // converts number from string to float
     journalData.forEach(function (data) {
         data.poverty = parseFloat(data.poverty)
         data.age = parseFloat(data.age)
@@ -206,7 +279,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .attr("class", "inactive")
         .attr("value", "income") // value to grab for event listener
         .text("Houshold Income (Median)");
-
+    // create group for y axis  labels 
     var yLabelsGroup = chartGroup.append("g")
         .attr("transform", `translate(${(chartHeight / 2)}, ${0 - margin.left})`)
         // .attr("x", 0 - (chartHeight / 2))
@@ -267,6 +340,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 // updates circles with new x values
                 circleGroup = xRenderCircle(circleGroup, xLinearScale, xkey);
 
+                // update texts with new x value 
                 textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
 
                 // updates tooltips with new info
