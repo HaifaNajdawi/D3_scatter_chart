@@ -110,11 +110,11 @@ function xUpdateToolTip(xkey, circleGroup) {
         });
     circleGroup.call(toolTip)
     // function return to the event listner mouseover
-    circleGroup.on("mouseover", function (d) {
-        toolTip.show(d, this)
+    circleGroup.on("mouseover", function (data) {
+        toolTip.show(data,this)
     })
         // onmouseout event
-        .on("mouseout", function (data) {
+        .on("mouseout", function (data,index) {
             toolTip.hide(data);
         });
     return circleGroup;
@@ -133,80 +133,15 @@ function yUpdateToolTip(ykey, circleGroup) {
 
     circleGroup.call(toolTip);
 
-    circleGroup.on("mouseover", function (d) {
-        toolTip.show(d, this)
+    circleGroup.on("mouseover", function (data) {
+        toolTip.show(data,this)
     })
         // onmouseout event
-        .on("mouseout", function (data, index) {
+        .on("mouseout", function (data,index) {
             toolTip.hide(data);
         });
     return circleGroup;
 }
-
-
-// function xUpdateToolTip(xkey,circleGroup) {
-//     // var label;
-//     // if (xkey === "poverty") {
-//     //   label = "Poverty:";
-//     // }
-//     // else if (xkey === "age") {
-//     //   label = "Age:";
-//     // }
-//     // else {
-//     //   label = "Income: $";
-//     // }
-//     var toolTip = d3.tip()
-//       .attr("class", "d3-tip")
-//       .offset([80, -60])
-//       .html(function(d) {
-//         return (`${d.state},${d.abbr}<br>${xkey} ${d[xkey]} <br> ${chosenYAxis} : ${d[chosenYAxis]}%`);
-//       });
-//     circleGroup.call(toolTip);
-//     // circlesGroup.on("mouseover", function(data) {
-//     //   toolTip.show(data);
-//     // })
-//     circleGroup.on("mouseover",function(d) { 
-//       toolTip.show(d, this)})
-//       // onmouseout event
-//       .on("mouseout", function(data, index) {
-//         toolTip.hide(data);
-//       });
-//     return circleGroup;
-//   }
-//   function yUpdateToolTip(ykey,circleGroup) {
-//     // var label;
-//     // if (ykey === "poverty") {
-//     //   label = "Poverty:";
-//     // }
-//     // else if (ykey === "age") {
-//     //   label = "Age:";
-//     // }
-//     // else {
-//     //   label = "Income: $";
-//     // }
-//     var toolTip = d3.tip()
-//       .attr("class", "d3-tip")
-//       .offset([80, -60])
-//       .html(function(d) {
-//         return (`${d.state},${d.abbr}<br>${xkey} ${d[xkey]} <br> ${ykey} : ${d[ykey]}%`);
-//       });
-//     circleGroup.call(toolTip);
-//     // circlesGroup.on("mouseover", function(data) {
-//     //   toolTip.show(data);
-//     // })
-//     circleGroup.on("mouseover",function(d) { 
-//       toolTip.show(d, this)})
-//       // onmouseout event
-//       .on("mouseout", function(data, index) {
-//         toolTip.hide(data);
-//       });
-//     return circleGroup;
-//   }
-
-
-
-
-
 
 // load the csv using d3 then create funtion has the data 
 d3.csv("assets/data/data.csv").then(function (journalData) {
