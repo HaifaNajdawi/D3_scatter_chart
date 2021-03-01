@@ -1,86 +1,3 @@
-// // set the dimentions and the margins of the graph
-// var margin = { top: 10, right: 30, bottom: 70, left: 50 };
-
-// var svgWidth = 800;
-// var svgHeight = 400;
-
-// var chartWidth = svgWidth - margin.left - margin.right;
-// var chartHeight = svgHeight - margin.top - margin.bottom;
-
-// // append svg object to the body
-
-// var svg = d3.select("#scatter")
-//     .append("svg")
-//     .attr("width", svgWidth)
-//     .attr("height", svgHeight)
-
-// const chartGroup = svg.append("g")
-//     .attr("transform", `translate(${margin.left},${margin.top})`)
-
-// // read the data path based to index file 
-// d3.csv("assets/data/data.csv").then(function (journalData) {
-//     console.log("data", journalData)
-
-//     console.log(d3.max(journalData, d => +(d.poverty)))
-
-//     // add x axis
-//     var xScale = d3.scaleLinear()
-//         .domain(d3.extent(journalData, d => +(d.poverty)))
-//         .range([0, chartWidth])
-
-//     chartGroup.append("g")
-//         // x axis to bottom
-//         .attr("transform", `translate(0,${chartHeight})`)
-//         // ticks loction
-//         .call(d3.axisBottom(xScale));
-
-//     // add y axis ticks 
-//     var yScale = d3.scaleLinear()
-//         .domain(d3.extent(journalData, d => +(d.healthcare)))
-//         .range([chartHeight, 0])
-
-//     chartGroup.append("g")
-//         .call(d3.axisLeft(yScale));
-
-//     // append circles to chart 
-//     chartGroup.append("g").selectAll(".stateCircle")
-//         .data(journalData)
-//         .enter()
-//         .append("circle")
-//         .classed("stateCircle", true)
-//         .attr("cx", d => xScale(d.poverty))
-//         .attr("cy", d => yScale(d.healthcare))
-//         .attr("r", 10);
-
-//     // append text to circles 
-//     chartGroup.append("g").selectAll(".stateText")
-//     .data(journalData)
-//     .enter()
-//     .append("text")
-//     .classed("stateText", true)
-//     .attr("x",  d => xScale(d.poverty))
-//     .attr("y", d => yScale(d.healthcare))
-//     .text(d => d.abbr );
-
-//     // x axis title
-//     chartGroup.append("text")
-//     .attr("class", "active")
-//     .attr("x",chartWidth/2)
-//     .attr("y", chartHeight+ margin.top + 23)
-//     .text("In Poverty %");
-
-//     // y axis title
-//     chartGroup.append("text")
-//     .attr("class", "active")
-//     .attr("x", 0 - (chartHeight / 2))
-//     .attr("y", 0 - margin.left +20)
-//     .attr("transform","rotate(-90)")
-//     .text("Lack Helathcare %");
-
-
-
-// });
-
 var margin = { top: 10, right: 30, bottom: 100, left: 100 };
 
 var svgWidth = 800;
@@ -106,7 +23,8 @@ var ykey = "healthcare";
 
 function xAxisScale(journalData, xkey) {
     xScale = d3.scaleLinear()
-        .domain([d3.min(journalData, d => d[xkey]), d3.max(journalData, d => d[xkey])])
+        .domain([d3.min(journalData, d => d[xkey]) *0.8
+        , d3.max(journalData, d => d[xkey])* 1.2])
         .range([0, chartWidth])
     return xScale
 
@@ -115,7 +33,8 @@ function xAxisScale(journalData, xkey) {
 
 function yAxisScale(journalData, ykey) {
     yScale = d3.scaleLinear()
-        .domain([d3.min(journalData, d => d[ykey]), d3.max(journalData, d => d[ykey])])
+        .domain([d3.min(journalData, d => d[ykey]) * 0.8,
+         d3.max(journalData, d => d[ykey]) * 1.2])
         .range([chartHeight, 0])
     return yScale
 }
@@ -168,7 +87,7 @@ function yRenderTextCircle(textGroup,yNewScale,ykey){
 
 // tooltip function to update citcle group with new one
 
-function updateToolTip(xkey,ykey,circleGroup){
+function xupdateToolTip(xkey,circleGroup){
 
 
     var toolTip = d3.tip()
@@ -183,41 +102,32 @@ function updateToolTip(xkey,ykey,circleGroup){
     circleGroup.on("mouseover",function(data){
         toolTip.show(data)
     })
-    circleGroup.on("mouseout",function(data){
+    circleGroup.on("mouseout",function(data,index){
         toolTip.hide(data)
     })
 return circleGroup;
 }
 
-// function yUpdatetoolTip(ykey,circleGroup){
-//     var label;
+function yupdateToolTip(ykey,circleGroup){
 
-//     if (ykey === "smokes"){
-//         label = "smokes"
-//     }
-//     else if (ykey == "obesity"){
-//         label = "obesity"
-//     }
-//     else {
-//         label="healthcare"
-//     }
-//     var toolTip = d3.tip()
-//         .attr("class","d3-tip")
-//         .offset([20,-20])
-//         .html(function(d){
-//             yLabel=`${d[ykey]}`
-//             return(yLabel)
-//         });
-//     circleGroup.call(toolTip)
 
-//     circleGroup.on("mouseover",function(data){
-//         toolTip.show(data)
-//     })
-//     circleGroup.on("mouseout",function(data){
-//         toolTip.hide(data)
-//     })
-// return circleGroup;
-// }
+    var toolTip = d3.tip()
+        .attr("class","d3-tip")
+        .offset([80,-70])
+        .html(function(d){
+            newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}: ${d[ykey]}`
+            return(newText)
+        });
+    circleGroup.call(toolTip)
+
+    circleGroup.on("mouseover",function(data){
+        toolTip.show(data)
+    })
+    circleGroup.on("mouseout",function(data,index){
+        toolTip.hide(data)
+    })
+return circleGroup;
+}
 
 
 
@@ -329,7 +239,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
     // updateToolTip function above csv import
-    var circleGroup = updateToolTip(xkey, ykey, circleGroup);
+    // var circleGroup = updateToolTip(xkey, ykey, circleGroup);
     // var circleGroup = yUpdatetoolTip(ykey, circleGroup);
     
 
@@ -360,7 +270,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
 
                 // updates tooltips with new info
-                circleGroup = updateToolTip(xkey, circleGroup);
+                // circleGroup = updateToolTip(xkey, circleGroup);
 
                 // changes classes to change bold text
                 if (xkey === "age") {
@@ -427,7 +337,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
                 // updates tooltips with new info
-                circleGroup = yUpdatetoolTip(ykey, circleGroup);
+                // circleGroup = yUpdatetoolTip(ykey, circleGroup);
 
 
                 // changes classes to change bold text
