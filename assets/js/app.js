@@ -241,7 +241,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
         .text("Smokes %");
 
     obesityLabel = yLabelsGroup.append("text")
-        .attr("x", -170)
+        .attr("x", -160)
         .attr("y", -70)
         .attr("class", "inactive")
         .attr("value", "obesity")
