@@ -87,7 +87,7 @@ function yRenderTextCircle(textGroup,yNewScale,ykey){
 
 // tooltip function to update citcle group with new one
 
-function xupdateToolTip(xkey,circleGroup){
+function xUpdateToolTip(xkey,circleGroup){
 
 
     var toolTip = d3.tip()
@@ -102,20 +102,20 @@ function xupdateToolTip(xkey,circleGroup){
     circleGroup.on("mouseover",function(data){
         toolTip.show(data)
     })
-    circleGroup.on("mouseout",function(data,index){
+    circleGroup.on("mouseout",function(data){
         toolTip.hide(data)
     })
 return circleGroup;
 }
 
-function yupdateToolTip(ykey,circleGroup){
+function yUpdateToolTip(ykey,circleGroup){
 
 
     var toolTip = d3.tip()
         .attr("class","d3-tip")
         .offset([80,-70])
         .html(function(d){
-            newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}: ${d[ykey]}`
+            newText= `${d.state} <br> ${xkey}: ${d[xkey]}<br> ${ykey}:  ${d[ykey]}`
             return(newText)
         });
     circleGroup.call(toolTip)
@@ -123,7 +123,7 @@ function yupdateToolTip(ykey,circleGroup){
     circleGroup.on("mouseover",function(data){
         toolTip.show(data)
     })
-    circleGroup.on("mouseout",function(data,index){
+    circleGroup.on("mouseout",function(data){
         toolTip.hide(data)
     })
 return circleGroup;
@@ -239,8 +239,8 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
     // updateToolTip function above csv import
-    // var circleGroup = updateToolTip(xkey, ykey, circleGroup);
-    // var circleGroup = yUpdatetoolTip(ykey, circleGroup);
+    var circleGroup = xUpdateToolTip(xkey, circleGroup);
+    var circleGroup = yUpdateToolTip(ykey, circleGroup);
     
 
 
@@ -270,7 +270,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
                 textGroup= xRenderTextCircle(textGroup,xLinearScale, xkey)
 
                 // updates tooltips with new info
-                // circleGroup = updateToolTip(xkey, circleGroup);
+                circleGroup = xUpdateToolTip(xkey, circleGroup);
 
                 // changes classes to change bold text
                 if (xkey === "age") {
@@ -337,7 +337,7 @@ d3.csv("assets/data/data.csv").then(function (journalData) {
 
 
                 // updates tooltips with new info
-                // circleGroup = yUpdatetoolTip(ykey, circleGroup);
+                circleGroup = yUpdateToolTip(ykey, circleGroup);
 
 
                 // changes classes to change bold text
